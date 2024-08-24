@@ -1,0 +1,29 @@
+# Python-specific
+*.pyc
+*.pyo
+__pycache__/
+.pytest_cache/
+.tox/
+.coverage
+
+# OpenAI-specific
+*api_key*  # Replace with your actual API key name
+*token*
+
+# LangChain-specific
+langchain/cache/
+langchain/memory/
+
+# Virtual environment and build artifacts
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDE-specific
+*.vscode/
+.idea/
+.DS_Store
+
+# Confidential data
+confidential_data/
