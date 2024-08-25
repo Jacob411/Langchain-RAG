@@ -1,9 +1,10 @@
-import os
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
 from langchain_chroma import Chroma
-from langchain_openai import OpenAIEmbeddings
+
+from generate_embedding_function import get_embedding_function
+
 import glob
 
 
@@ -40,10 +41,9 @@ def chunk_documents(documents : list[Document]):
     print(f'Chunked into {len(chunks)} chunks')
     return chunks
 
+
 def create_chroma_db(chunks : list[Document], persist_directory : str):
-    embedding_function = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-    )
+    embedding_function = get_embedding_function()
 
     vector_store = Chroma(
         collection_name="first_collection",
@@ -60,8 +60,8 @@ def create_chroma_db(chunks : list[Document], persist_directory : str):
 def main():
     directory = '/home/jacob/senior_design/Langchain-RAG/confidential_data/Projects/'
     docs = load_documents(directory)
+    docs = docs[:10]
     chunks = chunk_documents(docs)
-    chunks = chunks[:10]
     db = create_chroma_db(chunks, CHROMA_PATH)
     print('Created Chroma DB')
 
