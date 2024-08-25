@@ -60,19 +60,16 @@ def create_chroma_db(chunks : list[Document], persist_directory : str):
 def main():
     directory = '/home/jacob/senior_design/Langchain-RAG/confidential_data/Projects/'
     docs = load_documents(directory)
-    docs = docs[:10]
     chunks = chunk_documents(docs)
     db = create_chroma_db(chunks, CHROMA_PATH)
     print('Created Chroma DB')
 
     query_text = "What is the capital of France?"
-    results = db.similarity_search_with_score(query_text, k=5)
+    results = db.similarity_search_with_score(query_text, k=1)
 
     print('Closest matches to query: ', query_text)
     print(results)
 
-    retrieved = db.get(include=[])
-    print('retrieved: ',retrieved)
 
 if __name__ == '__main__':
     main()
