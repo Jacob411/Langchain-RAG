@@ -32,16 +32,24 @@ prompt = prompt_template.format(context=context_text, question=query_text)
 
 print(prompt)
 
-stream = ollama.chat(
-    model='llama3.1:8b',
-    messages=[{'role': 'user', 'content': prompt}],
-    stream=True,
-)
+# stream = ollama.chat(
+#     model='llama3.1:8b',
+#     messages=[{'role': 'user', 'content': prompt}],
+#     stream=True,
+# )
+#
+# print()
+# for chunk in stream:
+#   print(chunk['message']['content'], end='', flush=True)
+#
+
+from langchain_openai import ChatOpenAI
+
+model = ChatOpenAI(model="gpt-4o-mini")
+response = model.invoke(prompt)
 
 print()
-for chunk in stream:
-  print(chunk['message']['content'], end='', flush=True)
+print(response.content)
 
-# model = Ollama(model='llama3.1:8b')
-# response = model.invoke(prompt)
+
 
