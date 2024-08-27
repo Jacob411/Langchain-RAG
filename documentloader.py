@@ -8,7 +8,7 @@ from generate_embedding_function import get_embedding_function
 import glob
 
 
-CHROMA_PATH = '/home/jacob/senior_design/Langchain-RAG/chromaDB'
+CHROMA_PATH = '/Users/jakesimmons/repos/Langchain-RAG/chromaDB'
 
 def display_files():
     files = glob.glob('**/*.pdf', recursive=True)
@@ -58,7 +58,7 @@ def create_chroma_db(chunks : list[Document], persist_directory : str):
 
 
 def main():
-    directory = '/home/jacob/senior_design/Langchain-RAG/confidential_data/Projects/'
+    directory = '/Users/jakesimmons/repos/Langchain-RAG/confidential_data/Projects'
     docs = load_documents(directory)
     chunks = chunk_documents(docs)
     db = create_chroma_db(chunks, CHROMA_PATH)
