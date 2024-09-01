@@ -17,13 +17,13 @@ Answer the question based only on the following context:
 
 Answer the question based on the above context: {question}
 """
-def query(query_text, view_context=False):
+def query(query_text : str, collection_name : str, view_context=False : bool):
     print("Query:\n")
     print(query_text)
     CHROMA_PATH = '/Users/jakesimmons/repos/Langchain-RAG/chromaDB'
 
     embedding_function = get_embedding_function()
-    db = Chroma(collection_name='first_collection', persist_directory=CHROMA_PATH, embedding_function=embedding_function)
+    db = Chroma(collection_name=collection_name, persist_directory=CHROMA_PATH, embedding_function=embedding_function)
 
 
     results = db.similarity_search_with_score(query_text, k=5)

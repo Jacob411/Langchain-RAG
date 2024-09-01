@@ -10,10 +10,10 @@ import glob
 
 CHROMA_PATH = '/Users/jakesimmons/repos/Langchain-RAG/chromaDB'
 
-def display_files():
-    files = glob.glob('**/*.pdf', recursive=True)
+def display_files(directory):
+    files = glob.glob(f'{directory}/**/*.pdf', recursive=True)
     print(f'Found {len(files)} pdf files')
-    files = glob.glob('**/*.docx', recursive=True)
+    files = glob.glob(f'{directory}/**/*.docx', recursive=True)
     print(f'Found {len(files)} docx files')
 
 def load_documents(directory):
@@ -42,11 +42,11 @@ def chunk_documents(documents : list[Document]):
     return chunks
 
 
-def create_chroma_db(chunks : list[Document], persist_directory : str):
+def create_chroma_db(chunks : list[Document], persist_directory : str, collection_name : str):
     embedding_function = get_embedding_function()
 
     vector_store = Chroma(
-        collection_name="first_collection",
+        collection_name=collection_name,
         persist_directory=persist_directory,
         embedding_function=embedding_function
     )
@@ -58,18 +58,17 @@ def create_chroma_db(chunks : list[Document], persist_directory : str):
 
 
 def main():
-    directory = '/Users/jakesimmons/repos/Langchain-RAG/confidential_data/Projects'
+    directory = '/Users/jakesimmons/repos/Langchain-RAG/docs/osp_docs'
+    collection_name = "osp_initial_docs_V1"
     docs = load_documents(directory)
     chunks = chunk_documents(docs)
-    db = create_chroma_db(chunks, CHROMA_PATH)
-    print('Created Chroma DB')
+    db = create_chroma_db(chunks, CHROMA_PATH, collection_name=collection_name)
+    # print('Created Chroma DB')
+    
+    query = input('enter a query: ')
+    res = db.similarity_search_with_score(query, k=5)
 
-    query_text = "What is the capital of France?"
-    results = db.similarity_search_with_score(query_text, k=1)
-
-    print('Closest matches to query: ', query_text)
-    print(results)
-
+    print(res)
 
 if __name__ == '__main__':
     main()
