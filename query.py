@@ -17,6 +17,24 @@ Answer the question based only on the following context:
 
 Answer the question based on the above context: {question}
 """
+def overlap(a, b):
+    return max(i for i in range(len(b)+1) if a.endswith(b[:i]))
+
+def get_neighboring_context(db : Chroma, id : int, k = 1):
+    retrieval_ids  = [i for i in range(id - k, id + k + 1)]
+    print(retrieval_ids)
+    # grab each id and concat
+    res = ""
+
+    for id in retrieval_ids:
+        content = db.get(where={'id':id})['documents'][0]
+        met = db.get(where={'id':id})['metadatas'][0]
+        print(met)
+        overlap1 = overlap(res, content)
+        res += content[overlap1:]
+
+    return res
+
 def query(query_text : str, collection_name : str, view_context=False):
 
     print("Query:\n")
@@ -27,9 +45,12 @@ def query(query_text : str, collection_name : str, view_context=False):
     db = Chroma(collection_name=collection_name, persist_directory=CHROMA_PATH, embedding_function=embedding_function)
 
 
-    results = db.similarity_search_with_score(query_text, k=5)
+    results = db.similarity_search_with_score(query_text, k=3)
+    ids = [doc.metadata['id'] for doc, _ in results]
+    ids = set(ids)
 
-    context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
+    context_text = "\n\n---\n\n".join([get_neighboring_context(db, id, k=3) for id in ids])
+    # context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
     prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
     prompt = prompt_template.format(context=context_text, question=query_text)
 
@@ -51,11 +72,12 @@ def query(query_text : str, collection_name : str, view_context=False):
     print()
     view_context = input("view context? (y/n)")
     if view_context == 'y':
-        for doc in results:
-            print("Metadata: ", doc[0].metadata)
-            print("Content: ",doc[0].page_content)
-            print("Score: ", doc[1])
-            print('<=====================================================>')       
+        print(context_text)
+        # for doc in results:
+        #     print("Metadata: ", doc[0].metadata)
+        #     print("Content: ",doc[0].page_content)
+        #     print("Score: ", doc[1])
+        #     print('<=====================================================>')       
 
     # from langchain_openai import ChatOpenAI
 
