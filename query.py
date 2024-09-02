@@ -17,7 +17,8 @@ Answer the question based only on the following context:
 
 Answer the question based on the above context: {question}
 """
-def query(query_text : str, collection_name : str, view_context=False : bool):
+def query(query_text : str, collection_name : str, view_context=False):
+
     print("Query:\n")
     print(query_text)
     CHROMA_PATH = '/Users/jakesimmons/repos/Langchain-RAG/chromaDB'
@@ -48,9 +49,13 @@ def query(query_text : str, collection_name : str, view_context=False : bool):
 
 
     print()
+    view_context = input("view context? (y/n)")
     if view_context == 'y':
-        
-        print(context_text)
+        for doc in results:
+            print("Metadata: ", doc[0].metadata)
+            print("Content: ",doc[0].page_content)
+            print("Score: ", doc[1])
+            print('<=====================================================>')       
 
     # from langchain_openai import ChatOpenAI
 
@@ -64,8 +69,10 @@ def query(query_text : str, collection_name : str, view_context=False : bool):
 
 
 def main():
+    collection_name = "osp_initial_docs_V1"
     query_text = input("Enter a question: ")
-    query(query_text)
+
+    query(query_text, collection_name=collection_name)
 
 if __name__ == '__main__':
     main() 
