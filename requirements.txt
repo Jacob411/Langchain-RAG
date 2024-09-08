@@ -1,5 +1,5 @@
 requests
-protobuf==3.20.x
+protobuf==3.20.3
 streamlit
 langchain
 langchain-community
