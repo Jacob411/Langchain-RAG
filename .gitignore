@@ -27,5 +27,5 @@ build/
 
 # Confidential data
 confidential_data/
-chromaDB/
-docs/
+#chromaDB/
+#docs/
