@@ -22,7 +22,6 @@ def overlap(a, b):
 
 def get_neighboring_context(db : Chroma, id : int, k = 1):
     retrieval_ids  = [i for i in range(id - k, id + k + 1)]
-    print(retrieval_ids)
     # grab each id and concat
     res = ""
 
@@ -32,7 +31,6 @@ def get_neighboring_context(db : Chroma, id : int, k = 1):
             continue
         content = response['documents'][0]
         met = response['metadatas'][0]
-        print(met)
         overlap1 = overlap(res, content)
         res += content[overlap1:]
 
@@ -72,28 +70,44 @@ def query(query_text : str, collection_name : str, view_context=True):
     #     total += chunk['message']['content']
     # print()
 
-    sources = [doc[0].metadata['source'] for doc in results]
+    file_path = "file:///Users/jakesimmons/repos/Langchain-RAG/docs/osp_docs/eligibility.pdf"
+    result = {}
+
+
+    sources = [doc[0].metadata['source'].split('/')[-1] for doc in results]
+    page_nums = [doc[0].metadata['page'] for doc in results]
+    page_contents = [doc[0].page_content for doc in results]
+    display_texts = []
     display_text = ""
     if view_context: 
-        print(context_text)
         for doc in results:
             doc_name = doc[0].metadata['source'].split("/")[-1]
             page_num = doc[0].metadata['page']
             display_text += f"### Source \n  {doc_name}\n"
             display_text += f" **Page**  **{page_num}**\n"
-            display_text += f"[Link to source](file://{doc[0].metadata['source']})\n"
             display_text += f"#### Selected text: \n  {doc[0].page_content}\n"
             display_text += f"Score:  {doc[1]}\n"
             display_text += "\n\n---\n\n"
+            display_texts.append(display_text)
+            display_text = ""
 
 
     model = ChatOpenAI(model="gpt-4o-mini")
     response = model.invoke(prompt)
 
+    result['response'] = response.content
+    result['model_context'] = context_text
+    result['model_prompt'] = prompt
+    result['sources'] = sources
+    result['page_nums'] = page_nums
+    result['page_contents'] = page_contents
+    result['display_texts'] = display_texts
+
+
     #print()
     # print(response.content)
 
-    return response.content, display_text, sources
+    return result
 
 
 def main():
