@@ -1,5 +1,5 @@
 requests
-pysqlite3-binary
+protobuf
 streamlit
 langchain
 langchain-community
