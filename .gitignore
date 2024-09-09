@@ -20,6 +20,9 @@ venv/
 dist/
 build/
 
+# Streamlit-specific
+secrets.toml
+
 # IDE-specific
 *.vscode/
 .idea/

@@ -48,7 +48,7 @@ def query(query_text : str, collection_name : str, view_context=True):
 
     print("Query:\n")
     print(query_text)
-    CHROMA_PATH = '/Users/jakesimmons/repos/Langchain-RAG/chromaDB'
+    CHROMA_PATH = 'chromaDB'
 
     embedding_function = get_embedding_function()
     db = Chroma(collection_name=collection_name, persist_directory=CHROMA_PATH, embedding_function=embedding_function)
@@ -78,7 +78,6 @@ def query(query_text : str, collection_name : str, view_context=True):
     #     total += chunk['message']['content']
     # print()
 
-    file_path = "file:///Users/jakesimmons/repos/Langchain-RAG/docs/osp_docs/eligibility.pdf"
     result = {}
 
 
