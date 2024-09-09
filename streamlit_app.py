@@ -28,7 +28,7 @@ with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", type="password")
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
     if st.secrets["openai_api_key"]:
-        openai_api_key = st.secrets["openai_api_key"]
+       openai_api_key = st.secrets["openai_api_key"]
     os.environ["OPENAI_API_KEY"] = openai_api_key
     st.info("This is a prototype of the OSP Chatbot V1")
     
@@ -51,6 +51,7 @@ if prompt := st.chat_input():
         for i, (page, source) in enumerate(zip(response["page_nums"], response["sources"])):
             #st.write(response["display_texts"][i] + f" (Page) {page}")
             st.write(f"#### Source {i + 1}: \n{source} p. {page + 1}")
+            st.write(os.path.join(PATH_TO_DOCS, source))
             displayPDF(os.path.join(PATH_TO_DOCS, source), page=page + 1)
 #
 # with st.form("my_form"):
