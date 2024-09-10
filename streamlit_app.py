@@ -11,7 +11,7 @@ def displayPDF(file : str, page=1):
     with open(file, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}#page={page+2}" width="650" height="400" type="application/pdf"></iframe>'
+    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}#page={page+2}" width="100%" height="400" type="application/pdf"></iframe>'
 
     st.markdown(pdf_display, unsafe_allow_html=True)
 
